@@ -35,8 +35,9 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="include/CompareFile.h" />
+		<Unit filename="include/ProcessObserver.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="src/CompareFile.cpp" />
+		<Unit filename="src/ProcessObserver.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
