@@ -34,14 +34,26 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="include/CompareFile.h" />
+		<Unit filename="include/Block.h" />
+		<Unit filename="include/MemoryFileAccessor.h" />
 		<Unit filename="include/ProcessObserver.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Block.cpp" />
+		<Unit filename="src/MemoryFileAccessor.cpp" />
 		<Unit filename="src/ProcessObserver.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
 			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
