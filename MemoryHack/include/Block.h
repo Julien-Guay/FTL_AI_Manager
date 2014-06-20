@@ -2,49 +2,57 @@
 #define BLOCK_H
 /// \file Block.h
 
+#include <vector>
 #include <windows.h>
-#include MemoryFileAccessor.h
+#include <memory>
 
-using namespace std
+using namespace std;
+
 /**\class Block
 * \brief Represente une portion de la mémoire
 **/
 class Block
 {
+
 public:
-/// Default constructor
-    Block(MemoryFileAccessor& file_accessor, DWORD begin, DWORD end);
+    enum class BlockType
+    {
+        TYPE1,
+        TYPE2
+    };
+    Block(DWORD begin, DWORD end, BlockType type);
     virtual ~Block();
 
-/** \brief Renvoie un sous Block
- *
- * Renvoie le sous Block se trouvant à l'indice "indice"
- *
- * \param indice int
- * \return Block à l'indice correspondant
- *
- */
-    Block getBlock(int indice) const;
+
+    /** \brief Renvoie un sous Block
+     *
+     * Renvoie le sous Block se trouvant à l'indice "indice"
+     *
+     * \param indice int
+     * \return Block à l'indice correspondant
+     *
+     */
+    Block& getBlock(int indice) const;
 
     /** \brief Renvoie un sous Block
      *
      * Renvoie le ieme block de type correspondant
      *
-     * \param type block_type
+     * \param type BlockType
      * \param indice int
      * \return Block
      *
      */
-    Block getBlock(block_type type, int indice) const;
+    Block& getBlock(Block::BlockType type, int indice) const;
 
 
     /** \brief Renvoie tous les sous Blocks d'un type donné
      *
-     * \param type block_type
+     * \param type BlockType
      * \return vector<Block>
      *
      */
-    vector<Block> getBlocksByType(block_type type) const;
+    vector<Block> getBlocksByType(BlockType type) const;
 
     /** \brief Crée un sous Block
      *
@@ -52,56 +60,59 @@ public:
      *
      * \param begin DWORD
      * \param end DWORD
-     * \param type block_type
+     * \param type BlockType
      * \return void
      *
      */
-    void setSubBlock(DWORD begin, DWORD end, block_type type);
+    void setSubBlock(DWORD begin, DWORD end, BlockType type);
 
     /** \brief Fusion de deux Block
      *
-     * \param a const Block&
      * \param b const Block&
      * \return Block Block résultant de la fusion des Blocks fournis en paramètres.
      *
      */
-    Block operator+(const Block& a, const Block& b);
+    Block* operator+(const Block& b);
 
     /** \brief Extraction d'un Block
      *
-     * Extrait et renvoie un Block d'après les adresses spécifiées.
+     * Extrait et renvoie un nouveau Block d'après les adresses spécifiées.
      * Le Block renvoyé peut éventuellement contenir des sous Block si ceux ci existaient dans le Block appelant.
      * Le Block sur lequel est appellé la méthode n'est pas modifié.
      *
      * \param begin DWORD
      * \param end DWORD
-     * \return Block
+     * \return Block Le Block extrait
      *
      */
-    Block extract(DWORD begin, DWORD end) const;
+    Block* extract(DWORD begin, DWORD end) const;
 
     /** \brief Extraction d'un block
      *
-     * Extrait et renvoie un Block d'après les adresses spécifiées.
+     * Extrait et renvoie un nouveau Block d'après les adresses spécifiées.
      * Le Block renvoyé ne contient aucun sous Block.
      * Le Block sur lequel est appellé la méthode n'est pas modifié.
      *
      * \param begin DWORD
      * \param end DWORD
-     * \return Block
+     * \return Block Le Block extrait
      *
      */
-    Block extractAndClean(DWORD begin, DWORD end) const;
+    Block* extractAndClean(DWORD begin, DWORD end) const;
+
+    //Getter
+    long getSize();
+    DWORD getBegin();
+    DWORD getEnd();
+    BlockType getType();
 
 protected:
+private:
     const long size_;
     const DWORD begin_;
     const DWORD end_;
-    MemoryFileAccessor& file_accessor_
-    enum block_type {TYPE1,
-                    TYPE2
-                   };
-private:
+    BlockType type_;
+    vector<Block*> subblocks_;
 };
 
 #endif // BLOCK_H
