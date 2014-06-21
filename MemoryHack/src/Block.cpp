@@ -1,6 +1,6 @@
 #include "Block.h"
 
-Block::Block()
+Block(ProcessObserver& file_accessor, DWORD begin, DWORD end)
 {
     //ctor
 }
