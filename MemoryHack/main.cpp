@@ -16,7 +16,6 @@ int main()
     hwnd = FindWindow(NULL,"Démineur");
 
     cout<<  value << endl;
-
     ofstream fichier("test2.txt", ios::out | ios::trunc);  // on ouvre le fichier en lecture
 
 
