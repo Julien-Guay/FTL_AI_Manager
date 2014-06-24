@@ -1,22 +1,23 @@
 #include "ProcessObserver.h"
-
+#include <MemoryFileAccessor.h>
 
 ProcessObserver::~ProcessObserver()
 {
-    remove(file_name_.c_str());
 }
 
-ProcessObserver::ProcessObserver(const int begin,const int end,const string& name):beginning_address_(begin),ending_address_(end),size_(end-begin),file_name_(name)
+ProcessObserver::ProcessObserver()
 {
 }
 
-void ProcessObserver::copyMemoryInFile()
+VirtualBlock* ProcessObserver::buildVirtualBlock(const DWORD beginning_address,const DWORD ending_address)
 {
+    VirtualBlock* virtual_block_ptr = 0;
+    string file_name="toto.dat";
     byte value = 0;
     DWORD pid;
     HWND hwnd;
     hwnd = FindWindow(NULL,"FTL");//Rentré en dur comme un gros porc
-    ofstream file(file_name_, ios::out | ios::trunc | ios::binary);  //On ouvre le fichier en écriture
+    ofstream file(file_name, ios::out | ios::trunc | ios::binary);  //On ouvre le fichier en écriture
     if(!hwnd)
     {
         cout<<"La fenêtre n'a pas été trouvée"<<endl;
@@ -34,31 +35,43 @@ void ProcessObserver::copyMemoryInFile()
         cout<<"Impossible d'obtenir la poignée (handle)"<<endl;
         exit(3);//Dans l'idéal il faudrait lancer une exception
     }
-    for(DWORD address=beginning_address_; address<=ending_address_; address++)
+    for(DWORD address=beginning_address; address<=ending_address; address++)
     {
         ReadProcessMemory(phandle,(void*)address,&value,sizeof(value),0);
         file.write((char*)&value, sizeof(byte));
     }
     CloseHandle(phandle);
     file.close();
+    shared_ptr<MemoryFileAccessor> mem_file_accessor (new MemoryFileAccessor(beginning_address,ending_address,file_name));
+    virtual_block_ptr = new VirtualBlock(beginning_address,ending_address,(Block::BlockType)0,mem_file_accessor);
+    return virtual_block_ptr;
 }
 
-byte ProcessObserver::operator[](const DWORD address)
+Block* ProcessObserver::buildRealBlock(const DWORD beginning_address,const DWORD ending_address)
 {
-    byte value=0;
-    ifstream file(file_name_, ios::in| ios::binary);
-    if(!file)
+    int bufferSize = ending_address-beginning_address;
+    byte* buffer = 0;
+    buffer = new byte[bufferSize];
+    DWORD pid;
+    HWND hwnd;
+    hwnd = FindWindow(NULL,"FTL");//Rentré en dur comme un gros porc
+    if(!hwnd)
     {
-        cout<<"Le fichier ne s'est pas ouvert correctement"<<endl;
-        exit(2);//Dans l'idéal il faudrait lancer une exception
+        cout<<"La fenêtre n'a pas été trouvée"<<endl;
+        exit(1);//Dans l'idéal il faudrait lancer une exception
     }
-    file.seekg(address-this->beginning_address_);
-    file.read((char*)&value, sizeof(byte));
-    file.close();
-    return value;
+    GetWindowThreadProcessId(hwnd,&pid);
+    HANDLE phandle = OpenProcess(PROCESS_QUERY_INFORMATION,0,pid);
+    if(!phandle)
+    {
+        cout<<"Impossible d'obtenir la poignée (handle)"<<endl;
+        exit(3);//Dans l'idéal il faudrait lancer une exception
+    }
+    ReadProcessMemory(phandle,(void*)beginning_address,buffer,sizeof(byte)*bufferSize,0);
+    CloseHandle(phandle);
 }
 
-DWORD ProcessObserver::getMaxAdress()
+DWORD ProcessObserver::getMemoryLength()
 {
     DWORD pid, psize;
     PROCESS_MEMORY_COUNTERS counters;
