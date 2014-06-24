@@ -20,6 +20,7 @@ public:
         TYPE1,
         TYPE2
     };
+
     Block(DWORD begin, DWORD end, BlockType type);
     virtual ~Block();
 
@@ -29,7 +30,7 @@ public:
      * Renvoie le sous Block se trouvant à l'indice "indice"
      *
      * \param indice int
-     * \return Block à l'indice correspondant
+     * \return Block& à l'indice correspondant
      *
      */
     Block& getBlock(int indice) const;
@@ -40,7 +41,7 @@ public:
      *
      * \param type BlockType
      * \param indice int
-     * \return Block
+     * \return Block&
      *
      */
     Block& getBlock(Block::BlockType type, int indice) const;
@@ -49,10 +50,10 @@ public:
     /** \brief Renvoie tous les sous Blocks d'un type donné
      *
      * \param type BlockType
-     * \return vector<Block>
+     * \return vector< const Block*>*
      *
      */
-    vector<Block> getBlocksByType(BlockType type) const;
+    vector<const Block*>* getBlocksByType(BlockType type) const;
 
     /** \brief Crée un sous Block
      *
@@ -64,7 +65,7 @@ public:
      * \return void
      *
      */
-    void setSubBlock(DWORD begin, DWORD end, BlockType type);
+    virtual void setSubBlock(DWORD begin, DWORD end, BlockType type) = 0;
 
     /** \brief Fusion de deux Block
      *
@@ -72,7 +73,7 @@ public:
      * \return Block Block résultant de la fusion des Blocks fournis en paramètres.
      *
      */
-    Block* operator+(const Block& b);
+    virtual Block* operator+(const Block& b) = 0;
 
     /** \brief Extraction d'un Block
      *
@@ -85,7 +86,7 @@ public:
      * \return Block Le Block extrait
      *
      */
-    Block* extract(DWORD begin, DWORD end) const;
+    virtual Block* extract(DWORD begin, DWORD end) const =0;
 
     /** \brief Extraction d'un block
      *
@@ -98,7 +99,7 @@ public:
      * \return Block Le Block extrait
      *
      */
-    Block* extractAndClean(DWORD begin, DWORD end) const;
+    virtual Block* extractAndClean(DWORD begin, DWORD end) const = 0;
 
     //Getter
     long getSize();

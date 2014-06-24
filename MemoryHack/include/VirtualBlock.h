@@ -8,7 +8,7 @@ class VirtualBlock : public Block
 {
     public:
         /** Default constructor */
-        VirtualBlock(DWORD begin, DWORD end, BlockType type, shared_ptr<MemoryFileAccessor> file_accessor);
+    VirtualBlock(DWORD begin, DWORD end, BlockType type, shared_ptr<MemoryFileAccessor> file_accessor);
         /** Default destructor */
         virtual ~VirtualBlock();
         /** Access file_accessor_

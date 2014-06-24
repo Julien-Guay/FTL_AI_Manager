@@ -5,7 +5,13 @@ OutOfBoundException::OutOfBoundException()
     //ctor
 }
 
-OutOfBoundException::~OutOfBoundException()
-{
-    //dtor
-}
+//OutOfBoundException::~OutOfBoundException()
+//{
+//    //dtor
+//}
+
+//const char* what() const throw()
+//{
+//    return "";
+//}
+
