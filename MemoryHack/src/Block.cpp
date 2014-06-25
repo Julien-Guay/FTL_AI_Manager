@@ -24,8 +24,7 @@ template<typename T> Block<T>& Block<T>::getBlock(Block::BlockType type, int ind
 
     for(auto it(subblocks_.begin()) ; it != subblocks_.end() ; it++)
     {
-        //Erreur de compil
-        if((*it)->getType == type)
+        if((*it)->getType() == type)
         {
             if(count == indice)
                 return **it;
@@ -33,10 +32,29 @@ template<typename T> Block<T>& Block<T>::getBlock(Block::BlockType type, int ind
                 count++;
         }
     }
+    //TODO Implémenter la gestion des erreurs
 }
-//    vector<Block> getBlocksByType(BlockType type) const{
-//    }
-//    void setSubBlock(DWORD begin, DWORD end, BlockType type){
+
+vector<const Block*>* Block::getBlocksByType(BlockType type) const
+{
+    vector<const Block*>* blocks_by_type = new vector<const Block*>();
+    vector<Block*>::const_iterator subblock( subblocks_.begin());
+
+    while(subblock != subblocks_.end())
+    {
+        if((*subblock)->getType() == type)
+        {
+            blocks_by_type->push_back(*subblock);
+        }
+    }
+    return blocks_by_type;
+}
+
+//    void Block::setSubBlock(DWORD begin, DWORD end, BlockType type){
+//        if(subblocks_.size() == 0 )
+//        {
+//            subblocks_.push_back(new )
+//        }
 //    }
 //    Block* operator+(const Block& b){
 //    }

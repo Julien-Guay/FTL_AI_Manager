@@ -50,7 +50,8 @@ int main()
                     {
                         fichier << address << " " <<value << endl;
                     }
-                    if(!(address%1000000)){
+                    if(!(address%1000000))
+                    {
                         cout<< ((address*100)/psize) << "%" <<endl;
                         Sleep(50);
                     }

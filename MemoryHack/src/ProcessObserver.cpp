@@ -9,9 +9,9 @@ ProcessObserver::ProcessObserver()
 {
 }
 
-VirtualBlock* ProcessObserver::buildVirtualBlock(const DWORD beginning_address,const DWORD ending_address)
+Block<MemoryFileAccessor>* ProcessObserver::buildVirtualBlock(const DWORD beginning_address,const DWORD ending_address)
 {
-    VirtualBlock* virtual_block_ptr = 0;
+    Block<MemoryFileAccessor>* virtual_block_ptr = 0;
     string file_name="toto.dat";
     byte value = 0;
     DWORD pid;
@@ -43,11 +43,11 @@ VirtualBlock* ProcessObserver::buildVirtualBlock(const DWORD beginning_address,c
     CloseHandle(phandle);
     file.close();
     shared_ptr<MemoryFileAccessor> mem_file_accessor (new MemoryFileAccessor(beginning_address,ending_address,file_name));
-    virtual_block_ptr = new VirtualBlock(beginning_address,ending_address,(Block::BlockType)0,mem_file_accessor);
+    virtual_block_ptr = new Block<MemoryFileAccessor>(beginning_address,ending_address,(Block<MemoryFileAccessor>::BlockType)0,mem_file_accessor);
     return virtual_block_ptr;
 }
 
-Block* ProcessObserver::buildRealBlock(const DWORD beginning_address,const DWORD ending_address)
+Block<MemoryArrayAccessor>* ProcessObserver::buildRealBlock(const DWORD beginning_address,const DWORD ending_address)
 {
     int bufferSize = ending_address-beginning_address;
     byte* buffer = 0;

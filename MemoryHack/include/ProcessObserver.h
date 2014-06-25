@@ -6,7 +6,8 @@
 #include <windows.h>
 #include <psapi.h>
 #include <Block.h>
-#include <VirtualBlock.h>
+#include <MemoryArrayAccessor.h>
+#include<MemoryFileAccessor.h>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ class ProcessObserver
          * dans le fichier file_name_ qui est créé à cette occasion et renvoie un pointeur vers un
          * nouveau block contenant un MemoryFileAccessor encapsulant ce fichier
          */
-        VirtualBlock* buildVirtualBlock(const DWORD beginning_address,const DWORD ending_address);
+        Block<MemoryFileAccessor>* buildVirtualBlock(const DWORD beginning_address,const DWORD ending_address);
 
         /** \brief Créée un Block réel
          *
@@ -30,7 +31,7 @@ class ProcessObserver
          * dans un tableau et renvoie un pointeur vers un nouveau block contenant ce tableau.
          *
          */
-        Block* buildRealBlock(const DWORD beginning_address,const DWORD ending_address);
+        Block<MemoryArrayAccessor>* buildRealBlock(const DWORD beginning_address,const DWORD ending_address);
 
         /** \brief Retourne la plus grande valeur adressable
         /
