@@ -1,0 +1,16 @@
+#ifndef MEMORYACCESSOR_H
+#define MEMORYACCESSOR_H
+
+
+class MemoryAccessor
+{
+    public:
+        /** Default constructor */
+        MemoryAccessor();
+        /** Default destructor */
+        virtual ~MemoryAccessor();
+    protected:
+    private:
+};
+
+#endif // MEMORYACCESSOR_H

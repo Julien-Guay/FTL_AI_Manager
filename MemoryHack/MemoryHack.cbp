@@ -35,12 +35,14 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="include/Block.h" />
+		<Unit filename="include/MemoryAccessor.h" />
 		<Unit filename="include/MemoryFileAccessor.h" />
 		<Unit filename="include/OutOfBoundException.h" />
 		<Unit filename="include/ProcessObserver.h" />
 		<Unit filename="include/VirtualBlock.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Block.cpp" />
+		<Unit filename="src/MemoryAccessor.cpp" />
 		<Unit filename="src/MemoryFileAccessor.cpp" />
 		<Unit filename="src/OutOfBoundException.cpp" />
 		<Unit filename="src/ProcessObserver.cpp" />
