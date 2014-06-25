@@ -1,6 +1,6 @@
 #include "MemoryFileAccessor.h"
 
-MemoryFileAccessor::MemoryFileAccessor(const DWORD begin,const DWORD end,const string file):beginning_address_(begin),ending_address_(end),size_(end-begin),file_name_(file),file_stream_(file_name_,ios::in | ios::binary)
+MemoryFileAccessor::MemoryFileAccessor(const DWORD begin,const DWORD end,const string file):MemoryAccessor(begin,end),file_name_(file),file_stream_(file_name_,ios::in | ios::binary)
 {
 
 }
@@ -20,7 +20,7 @@ byte MemoryFileAccessor::operator[](const DWORD address)
         cout<<"Le fichier ne s'est pas ouvert correctement"<<endl;
         exit(2);//Dans l'idéal il faudrait lancer une exception
     }
-    file.seekg(address-this->beginning_address_);
+    file.seekg(relativeAdress(address));
     file.read((char*)&value, sizeof(byte));
     file.close();
     return value;

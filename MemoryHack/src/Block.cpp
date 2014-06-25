@@ -1,5 +1,5 @@
 #include "Block.h"
-template <class T>
+template <typename T>
 Block<T>::Block(DWORD begin, DWORD end, BlockType type, shared_ptr<T> mem_accessor)
     :begin_(begin),end_(end),type_(type),size_((long)(end - begin +1)), subblocks_(vector<Block*>()), mem_accessor_(mem_accessor)
 {
@@ -15,13 +15,14 @@ Block<T>::~Block()
     }
 }
 
-template <class T>
+template <typename T>
 Block<T>& Block<T>::getBlock(int indice) const
 {
     return *subblocks_[indice];
 }
 
-template <class T>
+
+template <typename T>
 Block<T>& Block<T>::getBlock(BlockType type, int indice) const
 {
     int count = 0;
@@ -39,7 +40,7 @@ Block<T>& Block<T>::getBlock(BlockType type, int indice) const
     //TODO Implémenter la gestion des erreurs
 }
 
-template <class T>
+template <typename T>
 vector<const Block<T>*>* Block<T>::getBlocksByType(BlockType type) const
 {
     vector<const Block*>* blocks_by_type = new vector<const Block*>();
@@ -57,7 +58,7 @@ vector<const Block<T>*>* Block<T>::getBlocksByType(BlockType type) const
 }
 
 //TODO Voir comment définir les types des blocks encadrants
-template <class T>
+template <typename T>
 void Block<T>::setSubBlock(DWORD begin, DWORD end, BlockType type)
 {
     //Si il ne contient aucun sousblock, il faut créer les nouveaux sousblock
@@ -99,29 +100,26 @@ void Block<T>::setSubBlock(DWORD begin, DWORD end, BlockType type)
 /*-------------
 ----GETTERS----
 -------------*/
-template <class T>
+template <typename T>
 long Block<T>::getSize()
 {
     return size_;
 }
 
-template <class T>
+template <typename T>
 DWORD Block<T>::getBegin()
 {
     return begin_;
 }
 
-template <class T>
+template <typename T>
 DWORD Block<T>::getEnd()
 {
     return end_;
 }
 
-template <class T>
+template <typename T>
 typename Block<T>::BlockType Block<T>::getType()
 {
     return type_;
 }
-
-//bool Block::BlockType::operator==(const Block::BlockType type){
-//}

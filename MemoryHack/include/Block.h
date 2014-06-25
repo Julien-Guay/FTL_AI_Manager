@@ -5,15 +5,16 @@
 #include <vector>
 #include <windows.h>
 #include <memory>
+#include <MemoryAccessor.h>
 
 #include <MemoryAccessor.h>
 
 using namespace std;
 
-template <class T>
 /**\class Block
 * \brief Represente une portion de la mémoire
 **/
+template<typename T>
 class Block
 {
 
@@ -57,7 +58,7 @@ public:
      * \return vector< const Block*>*
      *
      */
-    vector<const Block*>* getBlocksByType(BlockType type) const;
+    vector<const Block<T>*>* getBlocksByType(BlockType type) const;
 
     /** \brief Crée un sous Block
      *
@@ -69,15 +70,15 @@ public:
      * \return void
      *
      */
-     void setSubBlock(DWORD begin, DWORD end, BlockType type);
+    void setSubBlock(DWORD begin, DWORD end, BlockType type);
 
-    /** \brief Fusion de deux Block
-     *
-     * \param b const Block&
-     * \return Block Block résultant de la fusion des Blocks fournis en paramètres.
-     *
-     */
-    virtual Block* operator+(const Block& b) = 0;
+//    /** \brief Fusion de deux Block
+//     *
+//     * \param b const Block&
+//     * \return Block Block résultant de la fusion des Blocks fournis en paramètres.
+//     *
+//     */
+//    virtual Block* operator+(const Block& b) = 0;
 
 //    /** \brief Extraction d'un Block
 //     *
@@ -92,18 +93,18 @@ public:
 //     */
 //     Block* extract(DWORD begin, DWORD end) const;
 
-    /** \brief Extraction d'un block
-     *
-     * Extrait et renvoie un nouveau Block d'après les adresses spécifiées.
-     * Le Block renvoyé ne contient aucun sous Block.
-     * Le Block sur lequel est appellé la méthode n'est pas modifié.
-     *
-     * \param begin DWORD
-     * \param end DWORD
-     * \return Block Le Block extrait
-     *
-     */
-    virtual Block* extractAndClean(DWORD begin, DWORD end) const = 0;
+//    /** \brief Extraction d'un block
+//     *
+//     * Extrait et renvoie un nouveau Block d'après les adresses spécifiées.
+//     * Le Block renvoyé ne contient aucun sous Block.
+//     * Le Block sur lequel est appellé la méthode n'est pas modifié.
+//     *
+//     * \param begin DWORD
+//     * \param end DWORD
+//     * \return Block Le Block extrait
+//     *
+//     */
+//    virtual Block* extractAndClean(DWORD begin, DWORD end) const = 0;
 
     //Getter
     long getSize();

@@ -3,10 +3,11 @@
 #include <windows.h>
 #include <iostream>
 #include <fstream>
+#include <MemoryAccessor.h>
 
 using namespace std;
 
-class MemoryFileAccessor
+class MemoryFileAccessor : public MemoryAccessor
 {
 public:
     MemoryFileAccessor(const DWORD begin,const DWORD end,const string file);
@@ -20,9 +21,6 @@ public:
     byte operator[](const DWORD address);
 protected:
 private:
-    DWORD beginning_address_;
-    DWORD ending_address_;
-    int size_;
     string file_name_;
     ifstream file_stream_;
 
