@@ -43,7 +43,7 @@ Block<MemoryFileAccessor>* ProcessObserver::buildVirtualBlock(const DWORD beginn
     CloseHandle(phandle);
     file.close();
     shared_ptr<MemoryFileAccessor> mem_file_accessor (new MemoryFileAccessor(beginning_address,ending_address,file_name));
-    virtual_block_ptr = new Block<MemoryFileAccessor>(beginning_address,ending_address,(Block<MemoryFileAccessor>::BlockType)0,mem_file_accessor);
+    virtual_block_ptr = new Block<MemoryFileAccessor>(beginning_address,ending_address,(BlockType)0,mem_file_accessor);
     return virtual_block_ptr;
 }
 

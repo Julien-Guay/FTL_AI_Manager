@@ -7,9 +7,14 @@
 #include <memory>
 #include <MemoryAccessor.h>
 
-#include <MemoryAccessor.h>
-
 using namespace std;
+
+enum class BlockType
+{
+    TYPEVOID,
+    TYPE1,
+    TYPE2
+};
 
 /**\class Block
 * \brief Represente une portion de la mémoire
@@ -19,15 +24,21 @@ class Block
 {
 
 public:
-    enum class BlockType
-    {
-        TYPEVOID,
-        TYPE1,
-        TYPE2
-    };
 
-    Block(DWORD begin, DWORD end, BlockType type, shared_ptr<T> mem_accessor);
-    virtual ~Block();
+
+    Block(DWORD begin, DWORD end, BlockType type, shared_ptr<T> mem_accessor)
+        :begin_(begin),end_(end),type_(type),size_((long)(end - begin +1)), subblocks_(vector<Block*>()), mem_accessor_(mem_accessor)
+    {
+
+    }
+    virtual ~Block()
+    {
+        typename vector<Block*>::iterator i(subblocks_.begin());
+        while(i!=subblocks_.end())
+        {
+            delete *i;
+        }
+    }
 
 
     /** \brief Renvoie un sous Block
@@ -38,7 +49,10 @@ public:
      * \return Block& à l'indice correspondant
      *
      */
-    Block& getBlock(int indice) const;
+    Block& getBlock(int indice) const
+    {
+        return *subblocks_[indice];
+    }
 
     /** \brief Renvoie un sous Block
      *
@@ -49,7 +63,22 @@ public:
      * \return Block&
      *
      */
-    Block& getBlock(Block::BlockType type, int indice) const;
+    Block& getBlock(BlockType type, int indice) const
+    {
+        int count = 0;
+
+        for(auto it(subblocks_.begin()) ; it != subblocks_.end() ; it++)
+        {
+            if((*it)->getType() == type)
+            {
+                if(count == indice)
+                    return **it;
+                else
+                    count++;
+            }
+        }
+        //TODO Implémenter la gestion des erreurs
+    }
 
 
     /** \brief Renvoie tous les sous Blocks d'un type donné
@@ -58,7 +87,21 @@ public:
      * \return vector< const Block*>*
      *
      */
-    vector<const Block<T>*>* getBlocksByType(BlockType type) const;
+    vector<const Block<T>*>* getBlocksByType(BlockType type) const
+    {
+        vector<const Block*>* blocks_by_type = new vector<const Block*>();
+        typename vector<Block*>::const_iterator subblock( subblocks_.cbegin());
+
+        while(subblock != subblocks_.end())
+        {
+            if((*subblock)->getType() == type)
+            {
+                blocks_by_type->push_back(*subblock);
+            }
+            subblock++;
+        }
+        return blocks_by_type;
+    }
 
     /** \brief Crée un sous Block
      *
@@ -70,7 +113,36 @@ public:
      * \return void
      *
      */
-    void setSubBlock(DWORD begin, DWORD end, BlockType type);
+    void setSubBlock(DWORD begin, DWORD end, BlockType type)
+    {
+        //Si il ne contient aucun sousblock, il faut créer les nouveaux sousblock
+        if(subblocks_.size() == 0 )
+        {
+            if(begin != begin_)
+            {
+                subblocks_.push_back(new Block(begin_, begin, BlockType::TYPEVOID, mem_accessor_));//TODO Définir le type de block
+            }
+            subblocks_.push_back(new Block(begin, end, type, mem_accessor_));
+            if(end !=end_)
+            {
+                subblocks_.push_back(new Block(end, end_, BlockType::TYPEVOID, mem_accessor_));//TODO Définir le type de block
+            }
+        }
+        else//sinon il faut rechercher le sousblock qui va être découpé
+        {
+            typename vector<Block*>::iterator subblock( subblocks_.begin());
+            while((*subblock)->getBegin()> begin || subblock == subblocks_.end())
+            {
+                subblock++;
+            }
+            if((*subblock)->getEnd()<end)
+            {
+                //Cas d'erreur : découpe entre deux sousblocks
+                exit(1);
+            }
+            (*subblock)->setSubBlock(begin, end, type);
+        }
+    }
 
 //    /** \brief Fusion de deux Block
 //     *
@@ -107,10 +179,22 @@ public:
 //    virtual Block* extractAndClean(DWORD begin, DWORD end) const = 0;
 
     //Getter
-    long getSize();
-    DWORD getBegin();
-    DWORD getEnd();
-    BlockType getType();
+    long getSize()
+    {
+        return size_;
+    }
+    DWORD getBegin()
+    {
+        return begin_;
+    }
+    DWORD getEnd()
+    {
+        return end_;
+    }
+    BlockType getType()
+    {
+        return type_;
+    }
 
 protected:
 private:
