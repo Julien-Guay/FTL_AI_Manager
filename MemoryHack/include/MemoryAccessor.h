@@ -8,7 +8,7 @@ class MemoryAccessor
         /** Default constructor */
         MemoryAccessor();
         /** Default destructor */
-        virtual ~MemoryAccessor();
+        virtual ~MemoryAccessor() =0;
     protected:
     private:
 };

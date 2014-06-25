@@ -5,7 +5,7 @@ MemoryAccessor::MemoryAccessor()
     //ctor
 }
 
-MemoryAccessor::~MemoryAccessor()
-{
-    //dtor
-}
+//MemoryAccessor::~MemoryAccessor()
+//{
+//    //dtor
+//}

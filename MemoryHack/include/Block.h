@@ -6,8 +6,11 @@
 #include <windows.h>
 #include <memory>
 
+#include <MemoryAccessor.h>
+
 using namespace std;
 
+template <class T>
 /**\class Block
 * \brief Represente une portion de la mémoire
 **/
@@ -17,11 +20,12 @@ class Block
 public:
     enum class BlockType
     {
+        TYPEVOID,
         TYPE1,
         TYPE2
     };
 
-    Block(DWORD begin, DWORD end, BlockType type);
+    Block(DWORD begin, DWORD end, BlockType type, shared_ptr<T> mem_accessor);
     virtual ~Block();
 
 
@@ -65,7 +69,7 @@ public:
      * \return void
      *
      */
-    virtual void setSubBlock(DWORD begin, DWORD end, BlockType type) = 0;
+     void setSubBlock(DWORD begin, DWORD end, BlockType type);
 
     /** \brief Fusion de deux Block
      *
@@ -75,18 +79,18 @@ public:
      */
     virtual Block* operator+(const Block& b) = 0;
 
-    /** \brief Extraction d'un Block
-     *
-     * Extrait et renvoie un nouveau Block d'après les adresses spécifiées.
-     * Le Block renvoyé peut éventuellement contenir des sous Block si ceux ci existaient dans le Block appelant.
-     * Le Block sur lequel est appellé la méthode n'est pas modifié.
-     *
-     * \param begin DWORD
-     * \param end DWORD
-     * \return Block Le Block extrait
-     *
-     */
-    virtual Block* extract(DWORD begin, DWORD end) const =0;
+//    /** \brief Extraction d'un Block
+//     *
+//     * Extrait et renvoie un nouveau Block d'après les adresses spécifiées.
+//     * Le Block renvoyé peut éventuellement contenir des sous Block si ceux ci existaient dans le Block appelant.
+//     * Le Block sur lequel est appellé la méthode n'est pas modifié.
+//     *
+//     * \param begin DWORD
+//     * \param end DWORD
+//     * \return Block Le Block extrait
+//     *
+//     */
+//     Block* extract(DWORD begin, DWORD end) const;
 
     /** \brief Extraction d'un block
      *
@@ -114,6 +118,7 @@ private:
     const DWORD end_;
     BlockType type_;
     vector<Block*> subblocks_;
+    shared_ptr<MemoryAccessor> mem_accessor_;
 };
 
 #endif // BLOCK_H
