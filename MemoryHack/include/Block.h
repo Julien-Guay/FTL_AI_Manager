@@ -5,13 +5,14 @@
 #include <vector>
 #include <windows.h>
 #include <memory>
+#include <MemoryAccessor.h>
 
 using namespace std;
 
 /**\class Block
 * \brief Represente une portion de la mémoire
 **/
-class Block
+template<typename T> class Block
 {
 
 public:
@@ -20,7 +21,7 @@ public:
         TYPE1,
         TYPE2
     };
-    Block(DWORD begin, DWORD end, BlockType type);
+    Block(DWORD begin, DWORD end, BlockType type, T mem_access);
     virtual ~Block();
 
 
@@ -52,7 +53,7 @@ public:
      * \return vector<Block>
      *
      */
-    vector<Block> getBlocksByType(BlockType type) const;
+    vector<Block<T>> getBlocksByType(BlockType type) const;
 
     /** \brief Crée un sous Block
      *
@@ -112,7 +113,8 @@ private:
     const DWORD begin_;
     const DWORD end_;
     BlockType type_;
-    vector<Block*> subblocks_;
+    T mem_accessor_;
+    vector<Block<T>*> subblocks_;
 };
 
 #endif // BLOCK_H
